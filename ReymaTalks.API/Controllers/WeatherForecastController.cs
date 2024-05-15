@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ReymaTalks.Common;
 
 namespace ReymaTalks.API.Controllers
 {
@@ -10,17 +11,20 @@ namespace ReymaTalks.API.Controllers
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
-
+        private readonly IDateTime _dateTime;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(IDateTime dateTime, ILogger<WeatherForecastController> logger)
         {
+            _dateTime = dateTime;
             _logger = logger;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            _logger.LogInformation($"Today is {_dateTime.Now:F}");
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
